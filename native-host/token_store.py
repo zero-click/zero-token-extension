@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 from copy import deepcopy
 from pathlib import Path
+from typing import Optional, Tuple
 
 ZERO_CLICK_HOME = Path.home() / ".zero-click"
 ZERO_CLICK_ENV_JSON = ZERO_CLICK_HOME / ".env.json"
@@ -38,7 +39,7 @@ def _normalize_token_record(record: dict) -> dict:
     return normalized
 
 
-def normalize_store(data: dict | None) -> dict:
+def normalize_store(data: Optional[dict]) -> dict:
     """Normalize store data into the current schema."""
     normalized = default_store()
     if not data:
@@ -91,7 +92,7 @@ def save_store(store: dict) -> Path:
     return ZERO_CLICK_ENV_JSON
 
 
-def load_saved_token_record(token_type: str) -> tuple[dict | None, Path]:
+def load_saved_token_record(token_type: str) -> Tuple[Optional[dict], Path]:
     """Load a saved O365 token record from the shared store."""
     store = load_store()
     entry = store["o365"].get(token_type)
@@ -110,7 +111,7 @@ def save_token_record(token_type: str, token_data: dict) -> Path:
     return save_store(store)
 
 
-def load_saved_x_session() -> tuple[dict | None, Path]:
+def load_saved_x_session() -> Tuple[Optional[dict], Path]:
     """Load the saved X session record."""
     store = load_store()
     entry = store.get("x")
@@ -127,7 +128,7 @@ def save_x_session_record(session_data: dict) -> Path:
     return save_store(store)
 
 
-def extract_token_from_text(text: str, *, token_type: str | None = None) -> str:
+def extract_token_from_text(text: str, *, token_type: Optional[str] = None) -> str:
     """Extract a token string from raw text, token JSON, or the shared store JSON."""
     text = text.strip()
     if not text:

@@ -7,6 +7,7 @@ import json
 import sys
 import time
 from datetime import datetime, timezone
+from typing import Optional, Union
 
 from token_store import (
     load_saved_token_record,
@@ -49,9 +50,9 @@ def save_x_session(
     ct0: str,
     auth_token: str,
     *,
-    exp: int | float | None = None,
-    session_cookie: bool | None = None,
-    source: str | None = None,
+    exp: Optional[Union[int, float]] = None,
+    session_cookie: Optional[bool] = None,
+    source: Optional[str] = None,
 ):
     """Save X session cookies into ~/.zero-click/.env.json."""
     if not ct0:

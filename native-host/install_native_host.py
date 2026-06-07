@@ -17,7 +17,6 @@ def default_manifest_dir():
         return Path.home() / ".config/google-chrome/NativeMessagingHosts"
     raise SystemExit("Unsupported platform for this installer")
 
-
 def install_manifest(extension_id: str, manifest_dir: Path):
     host_script = Path(__file__).resolve().parent / "native_messaging_host.py"
     if not host_script.exists():
