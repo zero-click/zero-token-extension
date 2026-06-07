@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 420px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      padding: 16px;
+      background: #1a1a2e;
+      color: #eee;
+    }
+    h1 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: #00d4aa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h1::before { content: "🔑"; }
+    .token-section {
+      margin-bottom: 14px;
+    }
+    .section-card {
+      background: #121d35;
+      border: 1px solid #203048;
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .section-header {
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #c8d6e5;
+      margin-bottom: 4px;
+    }
+    .section-subtitle {
+      font-size: 11px;
+      color: #7f8fa6;
+      line-height: 1.4;
+    }
+    .section-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .provider-block {
+      padding-top: 0;
+    }
+    .provider-block + .provider-block {
+      padding-top: 6px;
+    }
+    .provider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .token-type {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .token-type.graph { color: #6c5ce7; }
+    .token-type.outlook { color: #0984e3; }
+    .token-type.sharepoint { color: #00b894; }
+    .token-type.x { color: #74b9ff; }
+    .status {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .status.valid { background: #00b89433; color: #00d4aa; }
+    .status.expired { background: #e74c3c33; color: #e74c3c; }
+    .status.none { background: #636e7233; color: #636e72; }
+    .token-info {
+      font-size: 11px;
+      color: #999;
+      margin-bottom: 6px;
+    }
+    .token-preview {
+      background: #0d1b2a;
+      border-radius: 4px;
+      padding: 8px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 11px;
+      color: #74b9ff;
+      word-break: break-all;
+      max-height: 60px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    .token-preview:hover { background: #1a2a3a; }
+    .token-preview::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: linear-gradient(transparent, #0d1b2a);
+    }
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .btn-copy {
+      background: #00d4aa;
+      color: #1a1a2e;
+    }
+    .btn-copy:hover { background: #00e6b8; }
+    .btn-copy.copied { background: #636e72; color: #fff; }
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .footer {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #636e72;
+      text-align: center;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 10px;
+    }
+    .btn-sync {
+      flex: 1;
+      background: #6c5ce7;
+      color: #fff;
+    }
+    .btn-sync:hover { background: #7d6df5; }
+    .btn-sync:disabled {
+      background: #4b4f75;
+      color: #c8c8d0;
+      cursor: wait;
+    }
+    .sync-status {
+      background: #0d1b2a;
+      border: 1px solid #203048;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #b2bec3;
+    }
+    .sync-status.success {
+      border-color: #00b89455;
+      color: #c8ffef;
+    }
+    .sync-status.error {
+      border-color: #e74c3c66;
+      color: #ffcdc7;
+    }
+    .sync-status strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Zero Token Extension</h1>
+  <div id="tokens"></div>
+  <div class="toolbar">
+    <button id="sync-button" class="btn btn-sync">Sync to local</button>
+  </div>
+  <div id="sync-status" class="sync-status">Native sync not run yet.</div>
+  <div class="footer">Tokens auto-captured from browser requests</div>
+  <script src="popup.js"></script>
+</body>
+</html>
