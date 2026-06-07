@@ -10,10 +10,6 @@ from pathlib import Path
 ZERO_CLICK_HOME = Path.home() / ".zero-click"
 ZERO_CLICK_ENV_JSON = ZERO_CLICK_HOME / ".env.json"
 
-ZERO_O365_HOME = Path.home() / ".zero-o365"
-ZERO_O365_TOKENS_DIR = ZERO_O365_HOME / "tokens"
-LEGACY_HERMES_HOME = Path.home() / ".hermes"
-
 LATEST_SCHEMA_VERSION = 1
 RESERVED_KEYS = {"schema_version", "o365", "x"}
 TOKEN_FILENAMES = {
@@ -43,7 +39,7 @@ def _normalize_token_record(record: dict) -> dict:
 
 
 def normalize_store(data: dict | None) -> dict:
-    """Normalize legacy store shapes into the current schema."""
+    """Normalize store data into the current schema."""
     normalized = default_store()
     if not data:
         return normalized
@@ -61,7 +57,6 @@ def normalize_store(data: dict | None) -> dict:
             if token_type in TOKEN_FILENAMES and isinstance(record, dict):
                 normalized["o365"][token_type] = _normalize_token_record(record)
     else:
-        # Backward compatibility for the older flat {graph, outlook, sharepoint, x} shape.
         for token_type in TOKEN_FILENAMES:
             record = data.get(token_type)
             if isinstance(record, dict):
@@ -96,38 +91,12 @@ def save_store(store: dict) -> Path:
     return ZERO_CLICK_ENV_JSON
 
 
-def backup_store() -> Path | None:
-    """Write a .bak copy of the current store if it exists."""
-    if not ZERO_CLICK_ENV_JSON.exists():
-        return None
-    backup_path = ZERO_CLICK_ENV_JSON.with_suffix(ZERO_CLICK_ENV_JSON.suffix + ".bak")
-    backup_path.write_text(ZERO_CLICK_ENV_JSON.read_text())
-    backup_path.chmod(0o600)
-    return backup_path
-
-
-def legacy_token_path(token_type: str) -> Path:
-    filename = TOKEN_FILENAMES[token_type]
-    new_path = ZERO_O365_TOKENS_DIR / filename
-    if new_path.exists():
-        return new_path
-    legacy_path = LEGACY_HERMES_HOME / filename
-    if legacy_path.exists():
-        return legacy_path
-    return new_path
-
-
-def load_saved_token_record(token_type: str, *, allow_legacy: bool = True) -> tuple[dict | None, Path]:
-    """Load a saved O365 token record from the shared store, with optional legacy fallback."""
+def load_saved_token_record(token_type: str) -> tuple[dict | None, Path]:
+    """Load a saved O365 token record from the shared store."""
     store = load_store()
     entry = store["o365"].get(token_type)
     if isinstance(entry, dict) and (entry.get("access_token") or entry.get("token")):
         return _normalize_token_record(entry), ZERO_CLICK_ENV_JSON
-
-    if allow_legacy:
-        path = legacy_token_path(token_type)
-        if path.exists():
-            return _normalize_token_record(json.loads(path.read_text())), path
 
     return None, ZERO_CLICK_ENV_JSON
 
@@ -141,29 +110,12 @@ def save_token_record(token_type: str, token_data: dict) -> Path:
     return save_store(store)
 
 
-def load_saved_x_session(*, allow_legacy: bool = False) -> tuple[dict | None, Path]:
+def load_saved_x_session() -> tuple[dict | None, Path]:
     """Load the saved X session record."""
     store = load_store()
     entry = store.get("x")
     if isinstance(entry, dict) and (entry.get("ct0") or entry.get("auth_token")):
         return dict(entry), ZERO_CLICK_ENV_JSON
-
-    if allow_legacy:
-        legacy_env = ZERO_CLICK_HOME / ".env"
-        if legacy_env.exists():
-            values = {}
-            for line in legacy_env.read_text().splitlines():
-                if "=" not in line:
-                    continue
-                key, value = line.split("=", 1)
-                value = value.strip()
-                key = key.strip()
-                if key == "CT0":
-                    values["ct0"] = value
-                elif key == "AUTH_TOKEN":
-                    values["auth_token"] = value
-            if values:
-                return values, legacy_env
 
     return None, ZERO_CLICK_ENV_JSON
 

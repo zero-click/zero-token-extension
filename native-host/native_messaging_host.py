@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chrome Native Messaging host for saving captured O365 tokens locally."""
+"""Chrome Native Messaging host for saving captured O365 and X credentials locally."""
 
 import json
 import struct
@@ -35,18 +35,7 @@ def send_message(message):
 
 def iter_items(message):
     items = message.get("items")
-    if items:
-        return items
-
-    legacy_items = []
-    for token in message.get("tokens") or []:
-        legacy_items.append({"kind": "jwt", **token})
-
-    x_session = message.get("x_session") or {}
-    if x_session:
-        legacy_items.append({"kind": "session", "type": "x", **x_session})
-
-    return legacy_items
+    return items or []
 
 
 def handle_jwt_item(item):

@@ -52,8 +52,9 @@ def main():
 
     print(f"✅ Native host manifest installed: {manifest_path}")
     print("Next steps:")
-    print("  1. Load or reload the unpacked Chrome extension from ~/code/zero-token-extension/extension")
-    print("  2. Open Outlook or Teams web to capture fresh tokens")
+    extension_dir = Path(__file__).resolve().parent.parent / "extension"
+    print(f"  1. Load or reload the unpacked Chrome extension from {extension_dir}")
+    print("  2. Open Outlook, Teams, SharePoint, or X to capture fresh credentials")
     print("  3. Click 'Sync to local' in the extension popup")
     print("  4. If the unpacked extension path changed, Chrome will assign a new extension ID — rerun this installer with the new ID.")
 

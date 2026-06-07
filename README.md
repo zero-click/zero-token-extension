@@ -95,17 +95,6 @@ python3 native-host/save_token.py "eyJ..."
 
 The helper auto-detects the token type and updates the shared store.
 
-## Migrate legacy files
-
-If you still have credentials under `~/.zero-o365/tokens/`, `~/.hermes/`, or `~/.zero-click/.env`:
-
-```bash
-python3 native-host/migrate_store.py --dry-run
-python3 native-host/migrate_store.py
-```
-
-Existing values in `~/.zero-click/.env.json` are preserved by default. Use `--overwrite` only when you intentionally want legacy values to replace newer ones.
-
 ## Privacy and security
 
 - Credentials stay in Chrome local storage until you explicitly sync them

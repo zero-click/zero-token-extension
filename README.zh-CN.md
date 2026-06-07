@@ -96,17 +96,6 @@ python3 native-host/save_token.py "eyJ..."
 
 脚本会自动识别 token 类型并更新 store。
 
-## 迁移旧文件
-
-如果旧凭证还在 `~/.zero-o365/tokens/`、`~/.hermes/` 或 `~/.zero-click/.env`：
-
-```bash
-python3 native-host/migrate_store.py --dry-run
-python3 native-host/migrate_store.py
-```
-
-默认**不会覆盖** `~/.zero-click/.env.json` 里已经存在的新值。只有你明确要让旧值覆盖新值时，才加 `--overwrite`。
-
 ## 隐私与安全
 
 - 凭证先保存在 Chrome 本地存储中，只有你点击同步时才写入本地文件

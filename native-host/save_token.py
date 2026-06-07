@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Save browser-extracted Microsoft tokens."""
+"""Save browser-extracted O365 tokens and X session values."""
 
 import argparse
 import base64
